@@ -1,0 +1,59 @@
+clc; 
+close all; 
+clear all; 
+disp('Generation of White Noise and Calculation of SNR and Noise Figure'); 
+%% Input Parameters 
+A = input('Enter amplitude of the signal = '); 
+f = input('Enter frequency of the signal (Hz) = '); 
+Fs = input('Enter sampling frequency (Hz) = '); 
+T = input('Enter duration of signal (seconds) = '); 
+Gain = input('Enter system gain = '); 
+%% Time Vector 
+t = 0:1/Fs:T; 
+%% Original Signal 
+signal = A*sin(2*pi*f*t); 
+%% Generate White Gaussian Noise 
+noise = randn(size(t)); 
+%% Noisy Signal 
+received = signal + noise; 
+%% Power Calculations 
+signal_power = mean(signal.^2); 
+noise_power = mean(noise.^2); 
+%% Signal to Noise Ratio (SNR) 
+SNR = 10*log10(signal_power/noise_power); 
+%% System Output (after gain) 
+output_signal = Gain*signal; 
+output_noise = Gain*noise; 
+%% Output Power 
+signal_power_out = mean(output_signal.^2); 
+noise_power_out = mean(output_noise.^2); 
+%% Output SNR 
+SNR_out = 10*log10(signal_power_out/noise_power_out); 
+%% Noise Figure Calculation 
+Noise_Figure = SNR - SNR_out; 
+%% Display Results 
+fprintf('\nSignal Power = %f\n',signal_power); 
+fprintf('Noise Power = %f\n',noise_power); 
+fprintf('Input SNR = %f dB\n',SNR); 
+fprintf('Output SNR = %f dB\n',SNR_out); 
+fprintf('Noise Figure = %f dB\n',Noise_Figure); 
+%% Plotting 
+figure 
+subplot(3,1,1) 
+plot(t,signal) 
+title('Original Signal') 
+xlabel('Time (s)') 
+ylabel('Amplitude') 
+grid on 
+subplot(3,1,2) 
+plot(t,noise) 
+title('Generated White Noise') 
+xlabel('Time (s)') 
+ylabel('Amplitude') 
+grid on 
+subplot(3,1,3) 
+plot(t,received) 
+title('Signal with White Noise') 
+xlabel('Time (s)') 
+ylabel('Amplitude') 
+grid on 
